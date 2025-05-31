@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-family: "Inter", sans-serif;
+  }
+}
+
+@layer components {
+  .tool-btn {
+    @apply w-10 h-10 flex justify-center items-center cursor-pointer duration-150 hover:bg-gray-200 rounded-lg active:bg-gray-300 focus:bg-gray-300;
+  }
+
+  .tooltip {
+    @apply absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-black text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10;
+  }
+}

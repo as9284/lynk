@@ -16,4 +16,5 @@ export const BookmarkBoard = () => {
         </div>
       </div>
     </>
-  );}
+  );
+};

@@ -8,7 +8,7 @@ export const BookmarkBoard = ({ handleDeleteClick }) => {
 
   if (bookmarks.length === 0) {
     return (
-      <div className="w-full flex justify-center items-center select-none">
+      <div className="w-full flex-1 flex justify-center items-center select-none">
         <h2 className="text-lg text-neutral-500 flex items-center gap-1">
           Press <IoAddOutline /> to create a new bookmark
         </h2>

@@ -16,6 +16,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
   const addBookmark = useStore((state) => state.addBookmark);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [link, setLink] = useState("");
   const [selectedColor, setSelectedColor] = useState("bg-sky-200");
 
   const handleCreate = () => {
@@ -25,11 +26,13 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
       id: crypto.randomUUID(),
       title,
       description,
+      link,
       color: selectedColor,
     });
 
     setTitle("");
     setDescription("");
+    setLink("");
     setSelectedColor("bg-sky-200");
     setAddBookmarkPopup(false);
   };
@@ -40,7 +43,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="absolute w-full min-h-svh flex flex-col justify-center items-center z-50 bg-black/20 backdrop-blur-xs p-4"
+      className="absolute w-full min-h-svh flex flex-col justify-center items-center z-50 bg-black/20 backdrop-blur-xs p-2 md:p-4"
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
@@ -48,7 +51,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.1 }}
-        className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[30rem] bg-white rounded-lg shadow-md flex flex-col justify-start items-center gap-4"
+        className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[38rem] bg-white rounded-lg shadow-md flex flex-col justify-start items-center gap-4"
       >
         <h2 className="w-full text-2xl font-semibold text-center pt-8">
           Create Bookmark
@@ -58,7 +61,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
           <div className="w-full flex flex-col items-start gap-2">
             <p className="text-xl">Title</p>
             <input
-              className="p-4 w-full rounded-lg shadow-sm focus:shadow-md"
+              className="simple-input"
               type="text"
               placeholder="Enter bookmark title"
               value={title}
@@ -69,11 +72,22 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
           <div className="w-full flex flex-col items-start gap-2">
             <p className="text-xl">Description</p>
             <input
-              className="p-4 w-full rounded-lg shadow-sm focus:shadow-md"
+              className="simple-input"
               type="text"
               placeholder="Enter description (optional)"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          <div className="w-full flex flex-col items-start gap-2">
+            <p className="text-xl">Link</p>
+            <input
+              className="simple-input"
+              type="text"
+              placeholder="Enter website link"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
             />
           </div>
 

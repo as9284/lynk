@@ -21,24 +21,32 @@ export const BookmarkBoard = ({ handleDeleteClick }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
         {bookmarks.map((bookmark, idx) => (
           <div
+            onClick={() => window.open(bookmark.link, "_blank")}
             key={bookmark.id}
-            className={`relative h-60 p-6 rounded-lg shadow-sm ${bookmark.color} w-full hover:shadow-md hover:scale-[1.02] duration-200`}
+            className={`relative h-60 p-6 rounded-lg shadow-sm ${bookmark.color} w-full hover:shadow-md hover:scale-[1.02] duration-200 cursor-pointer`}
           >
             <h3 className="text-2xl font-bold truncate select-none">
               {bookmark.title}
             </h3>
+
             {bookmark.description && (
               <p className="text-base mt-1 line-clamp-4 leading-relaxed select-none">
                 {bookmark.description}
               </p>
             )}
+
             <button
-              onClick={() => handleDeleteClick(bookmark)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteClick(bookmark);
+              }}
               className="card-btn absolute bottom-4 right-4 group"
             >
               <FaTrash size={24} />
               <span className="tooltip">Delete</span>
             </button>
+
+            <p className="text-sm opacity-40 truncate select-none">{bookmark.link}</p>
           </div>
         ))}
       </div>

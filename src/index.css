@@ -26,4 +26,8 @@
   .color-picker {
     @apply w-8 h-8 rounded-full cursor-pointer;
   }
+
+  .simple-input {
+    @apply p-4 w-full rounded-lg outline-0 shadow-sm focus:shadow-md duration-200;
+  }
 }

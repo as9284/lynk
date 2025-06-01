@@ -12,7 +12,7 @@ const colorRingMap = {
 };
 
 export const CreateBookmark = ({ setAddBookmarkPopup }) => {
-  const [selectedColor, setSelectedColor] = useState("bg-sky-200");
+  const [selectedColor, setSelectedColor] = useState("bg-indigo-200");
 
   return (
     <motion.div

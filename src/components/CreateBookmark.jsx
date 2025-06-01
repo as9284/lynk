@@ -18,9 +18,37 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [selectedColor, setSelectedColor] = useState("bg-sky-200");
+  const [errors, setErrors] = useState({});
+
+  const handleDescriptionChange = (e) => {
+    const newDescription = e.target.value;
+
+    if (newDescription.length <= 80) {
+      setDescription(newDescription);
+      setErrors((prev) => ({ ...prev, description: "" }));
+    }
+  };
 
   const handleCreate = () => {
-    if (!title.trim()) return;
+    const newErrors = {};
+
+    if (!title.trim()) {
+      newErrors.title = "Required";
+    }
+
+    if (!link.trim()) {
+      newErrors.link = "Required";
+    }
+
+    if (description.length > 80) {
+      newErrors.description = `${description.length}/80 characters`;
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
 
     addBookmark({
       id: crypto.randomUUID(),
@@ -34,6 +62,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
     setDescription("");
     setLink("");
     setSelectedColor("bg-sky-200");
+    setErrors({});
     setAddBookmarkPopup(false);
   };
 
@@ -53,46 +82,85 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
         transition={{ duration: 0.1 }}
         className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[38rem] bg-white rounded-lg shadow-md flex flex-col justify-start items-center gap-4"
       >
-        <h2 className="w-full text-2xl font-semibold text-center pt-8">
+        <h2 className="w-full text-2xl font-semibold text-center pt-8 select-none">
           Create Bookmark
         </h2>
 
         <div className="w-full flex flex-col items-center px-8 gap-6">
           <div className="w-full flex flex-col items-start gap-2">
-            <p className="text-xl">Title</p>
+            <div className="w-full flex justify-between items-center">
+              <p className="text-xl select-none">Title</p>
+              {errors.title && (
+                <p className="text-red-400 text-xs opacity-75 select-none">
+                  {errors.title}
+                </p>
+              )}
+            </div>
             <input
-              className="simple-input"
+              className={`simple-input ${
+                errors.title ? "ring-1 ring-red-300" : ""
+              }`}
               type="text"
               placeholder="Enter bookmark title"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                if (errors.title) {
+                  setErrors((prev) => ({ ...prev, title: "" }));
+                }
+              }}
             />
           </div>
 
           <div className="w-full flex flex-col items-start gap-2">
-            <p className="text-xl">Description</p>
+            <div className="w-full flex justify-between items-center">
+              <p className="text-xl select-none">Description</p>
+              <p
+                className={`text-xs ${
+                  description.length > 80 ? "text-red-400" : "text-gray-400"
+                } opacity-75 select-none`}
+              >
+                {errors.description || `${description.length}/80`}
+              </p>
+            </div>
             <input
-              className="simple-input"
+              className={`simple-input ${
+                errors.description ? "ring-1 ring-red-300" : ""
+              }`}
               type="text"
               placeholder="Enter description (optional)"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={handleDescriptionChange}
             />
           </div>
 
           <div className="w-full flex flex-col items-start gap-2">
-            <p className="text-xl">Link</p>
+            <div className="w-full flex justify-between items-center">
+              <p className="text-xl select-none">Link</p>
+              {errors.link && (
+                <p className="text-red-400 text-xs opacity-75 select-none">
+                  {errors.link}
+                </p>
+              )}
+            </div>
             <input
-              className="simple-input"
+              className={`simple-input ${
+                errors.link ? "ring-1 ring-red-300" : ""
+              }`}
               type="text"
               placeholder="Enter website link"
               value={link}
-              onChange={(e) => setLink(e.target.value)}
+              onChange={(e) => {
+                setLink(e.target.value);
+                if (errors.link) {
+                  setErrors((prev) => ({ ...prev, link: "" }));
+                }
+              }}
             />
           </div>
 
           <div className="w-full flex flex-col items-center gap-3">
-            <p className="text-xl">Bookmark Color</p>
+            <p className="text-xl select-none">Bookmark Color</p>
             <div className="w-full flex justify-evenly flex-wrap">
               {Object.keys(colorRingMap).map((colorClass) => (
                 <div

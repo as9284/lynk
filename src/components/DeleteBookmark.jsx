@@ -24,11 +24,11 @@ export const DeleteBookmark = ({ bookmark, setDeleteBookmarkPopup }) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.1 }}
-        className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[15rem] bg-white rounded-lg shadow-md flex flex-col justify-center items-center gap-6 p-8"
+        className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[15rem] bg-white dark:bg-black rounded-lg shadow-md flex flex-col justify-center items-center gap-6 p-8"
       >
-        <h2 className="text-2xl font-semibold text-center">Delete Bookmark</h2>
+        <h2 className="text-2xl font-semibold text-center select-none">Delete Bookmark</h2>
 
-        <p className="text-lg text-center text-gray-700">
+        <p className="text-lg text-center select-none">
           Are you sure you want to delete "{bookmark.title}"?
         </p>
 

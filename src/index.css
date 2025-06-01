@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   html {
     font-family: "Inter", sans-serif;
+    @apply bg-white dark:bg-neutral-800 text-black dark:text-white transition-colors;
   }
 }
 
 @layer components {
   .tool-btn {
-    @apply w-10 h-10 flex justify-center items-center cursor-pointer duration-150 hover:bg-neutral-200 rounded-lg active:bg-neutral-300 focus:bg-neutral-300;
+    @apply w-10 h-10 flex justify-center items-center cursor-pointer duration-150 hover:bg-neutral-200 hover:dark:bg-neutral-600 rounded-lg active:bg-neutral-300 active:dark:bg-neutral-500 focus:bg-neutral-300 focus:dark:bg-neutral-500;
   }
 
   .tool-txt-btn {
-    @apply px-4 py-2 flex justify-center items-center cursor-pointer duration-150 hover:bg-neutral-200 rounded-lg active:bg-neutral-300 focus:bg-neutral-300 text-lg font-medium;
+    @apply px-4 py-2 flex justify-center items-center cursor-pointer duration-150 hover:bg-neutral-200 hover:dark:bg-neutral-600 rounded-lg active:bg-neutral-300 active:dark:bg-neutral-500 focus:bg-neutral-300 focus:dark:bg-neutral-500 text-lg font-medium;
   }
 
   .card-btn {
@@ -28,6 +31,6 @@
   }
 
   .simple-input {
-    @apply p-4 w-full rounded-lg outline-0 shadow-sm focus:shadow-md duration-200;
+    @apply p-4 w-full rounded-lg dark:bg-neutral-800 outline-0 shadow-sm dark:shadow-neutral-800 focus:shadow-md duration-200;
   }
 }

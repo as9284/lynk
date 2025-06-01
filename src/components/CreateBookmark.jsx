@@ -1,24 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import useStore from "../utils/store";
-
-const colorRingMap = {
-  "bg-sky-200": "ring-sky-400",
-  "bg-teal-200": "ring-teal-400",
-  "bg-emerald-200": "ring-emerald-400",
-  "bg-indigo-200": "ring-indigo-400",
-  "bg-fuchsia-200": "ring-fuchsia-400",
-  "bg-red-200": "ring-red-400",
-  "bg-neutral-200": "ring-neutral-400",
-};
+import {
+  COLOR_VARIANTS,
+  COLOR_NAMES,
+  DEFAULT_COLOR,
+  getColorClasses,
+} from "../constants/colors";
 
 export const CreateBookmark = ({ setAddBookmarkPopup }) => {
   const addBookmark = useStore((state) => state.addBookmark);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
-  const [selectedColor, setSelectedColor] = useState("bg-sky-200");
+  const [selectedColor, setSelectedColor] = useState(DEFAULT_COLOR);
   const [errors, setErrors] = useState({});
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return document.documentElement.classList.contains("dark");
+  });
+
+  useEffect(() => {
+    const checkDarkMode = () => {
+      const darkMode = document.documentElement.classList.contains("dark");
+      setIsDarkMode(darkMode);
+    };
+
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleDescriptionChange = (e) => {
     const newDescription = e.target.value;
@@ -61,7 +75,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
     setTitle("");
     setDescription("");
     setLink("");
-    setSelectedColor("bg-sky-200");
+    setSelectedColor(DEFAULT_COLOR);
     setErrors({});
     setAddBookmarkPopup(false);
   };
@@ -80,16 +94,16 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.1 }}
-        className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[38rem] bg-white rounded-lg shadow-md flex flex-col justify-start items-center gap-4"
+        className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[38rem] bg-white dark:bg-black rounded-lg shadow-md flex flex-col justify-start items-center gap-4"
       >
-        <h2 className="w-full text-2xl font-semibold text-center pt-8 select-none">
+        <h2 className="w-full text-2xl font-semibold text-center pt-8 select-none dark:text-white">
           Create Bookmark
         </h2>
 
         <div className="w-full flex flex-col items-center px-8 gap-6">
           <div className="w-full flex flex-col items-start gap-2">
             <div className="w-full flex justify-between items-center">
-              <p className="text-xl select-none">Title</p>
+              <p className="text-xl select-none dark:text-white">Title</p>
               {errors.title && (
                 <p className="text-red-400 text-xs opacity-75 select-none">
                   {errors.title}
@@ -114,10 +128,12 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
 
           <div className="w-full flex flex-col items-start gap-2">
             <div className="w-full flex justify-between items-center">
-              <p className="text-xl select-none">Description</p>
+              <p className="text-xl select-none dark:text-white">Description</p>
               <p
                 className={`text-xs ${
-                  description.length > 80 ? "text-red-400" : "text-gray-400"
+                  description.length > 80
+                    ? "text-red-400"
+                    : "text-gray-400 dark:text-gray-500"
                 } opacity-75 select-none`}
               >
                 {errors.description || `${description.length}/80`}
@@ -136,7 +152,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
 
           <div className="w-full flex flex-col items-start gap-2">
             <div className="w-full flex justify-between items-center">
-              <p className="text-xl select-none">Link</p>
+              <p className="text-xl select-none dark:text-white">Link</p>
               {errors.link && (
                 <p className="text-red-400 text-xs opacity-75 select-none">
                   {errors.link}
@@ -160,19 +176,24 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
           </div>
 
           <div className="w-full flex flex-col items-center gap-3">
-            <p className="text-xl select-none">Bookmark Color</p>
+            <p className="text-xl select-none dark:text-white">
+              Bookmark Color
+            </p>
             <div className="w-full flex justify-evenly flex-wrap">
-              {Object.keys(colorRingMap).map((colorClass) => (
-                <div
-                  key={colorClass}
-                  className={`color-picker ${colorClass} ${
-                    selectedColor === colorClass
-                      ? `ring-2 ring-offset-2 ring-offset-white ${colorRingMap[colorClass]} duration-200`
-                      : ""
-                  }`}
-                  onClick={() => setSelectedColor(colorClass)}
-                />
-              ))}
+              {COLOR_NAMES.map((colorName) => {
+                const colorClasses = getColorClasses(colorName, isDarkMode);
+                return (
+                  <div
+                    key={colorName}
+                    className={`color-picker ${colorClasses.bg} ${
+                      selectedColor === colorName
+                        ? `ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ${colorClasses.ring} duration-200`
+                        : ""
+                    }`}
+                    onClick={() => setSelectedColor(colorName)}
+                  />
+                );
+              })}
             </div>
           </div>
 

@@ -2,7 +2,7 @@ import React from "react";
 import { IoAddOutline } from "react-icons/io5";
 import { TiCog } from "react-icons/ti";
 
-export const Header = ({ setAddBookmarkPopup }) => {
+export const Header = ({ setAddBookmarkPopup, setSettingsPopup }) => {
   return (
     <>
       <div className="w-full h-20 flex justify-between items-center px-2 md:px-8">
@@ -16,7 +16,10 @@ export const Header = ({ setAddBookmarkPopup }) => {
             <span className="tooltip">New</span>
           </button>
 
-          <button className="tool-btn relative group">
+          <button
+            onClick={() => setSettingsPopup(true)}
+            className="tool-btn relative group"
+          >
             <TiCog size={30} />
             <span className="tooltip">Settings</span>
           </button>

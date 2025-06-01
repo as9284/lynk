@@ -15,7 +15,7 @@ export const Home = () => {
         )}
       </AnimatePresence>
 
-      <div className="w-full min-h-svh flex flex-col justify-center items-start p-4 gap-4">
+      <div className="w-full min-h-svh flex flex-col justify-start items-center p-4 gap-4">
         <Header setAddBookmarkPopup={setAddBookmarkPopup} />
         <BookmarkBoard />
       </div>

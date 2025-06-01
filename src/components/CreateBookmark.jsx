@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import useStore from "../utils/store";
 
 const colorRingMap = {
   "bg-sky-200": "ring-sky-400",
@@ -12,7 +13,25 @@ const colorRingMap = {
 };
 
 export const CreateBookmark = ({ setAddBookmarkPopup }) => {
+  const addBookmark = useStore((state) => state.addBookmark);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [selectedColor, setSelectedColor] = useState("bg-indigo-200");
+
+  const handleCreate = () => {
+    if (!title.trim()) return;
+
+    addBookmark({
+      title,
+      description,
+      color: selectedColor,
+    });
+
+    setTitle("");
+    setDescription("");
+    setSelectedColor("bg-indigo-200");
+    setAddBookmarkPopup(false);
+  };
 
   return (
     <motion.div
@@ -30,46 +49,42 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
         transition={{ duration: 0.1 }}
         className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[30rem] bg-white rounded-lg shadow-md flex flex-col justify-start items-center gap-4"
       >
-        <h2 className="w-full text-2xl font-semibold select-none text-center pt-8">
+        <h2 className="w-full text-2xl font-semibold text-center pt-8">
           Create Bookmark
         </h2>
 
-        <div className="w-full flex flex-col justify-center items-center px-8 gap-6">
-          <div className="w-full flex flex-col justify-center items-start gap-2">
-            <p className="text-xl select-none">Title</p>
+        <div className="w-full flex flex-col items-center px-8 gap-6">
+          <div className="w-full flex flex-col items-start gap-2">
+            <p className="text-xl">Title</p>
             <input
-              className="p-4 w-full rounded-lg outline-0 shadow-sm placeholder:text-neutral-400 duration-150 focus:shadow-md focus:shadow-neutral-300"
+              className="p-4 w-full rounded-lg shadow-sm focus:shadow-md"
               type="text"
               placeholder="Enter bookmark title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
-          <div className="w-full flex flex-col justify-center items-start gap-2">
-            <p className="text-xl select-none">Description</p>
+          <div className="w-full flex flex-col items-start gap-2">
+            <p className="text-xl">Description</p>
             <input
-              className="p-4 w-full rounded-lg outline-0 shadow-sm placeholder:text-neutral-400 duration-150 focus:shadow-md focus:shadow-neutral-300"
+              className="p-4 w-full rounded-lg shadow-sm focus:shadow-md"
               type="text"
               placeholder="Enter description (optional)"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
-          <div className="w-full flex flex-col justify-center items-center gap-3">
-            <p className="text-xl select-none">Bookmark Color</p>
-            <div className="w-full flex justify-evenly items-center flex-wrap">
-              {[
-                "bg-indigo-200",
-                "bg-sky-200",
-                "bg-teal-200",
-                "bg-emerald-200",
-                "bg-fuchsia-200",
-                "bg-red-200",
-                "bg-neutral-200",
-              ].map((colorClass) => (
+          <div className="w-full flex flex-col items-center gap-3">
+            <p className="text-xl">Bookmark Color</p>
+            <div className="w-full flex justify-evenly flex-wrap">
+              {Object.keys(colorRingMap).map((colorClass) => (
                 <div
                   key={colorClass}
                   className={`color-picker ${colorClass} ${
                     selectedColor === colorClass
-                      ? `ring-2 ring-offset-2 ring-offset-white ${colorRingMap[colorClass]} duration-100`
+                      ? `ring-2 ring-offset-2 ring-offset-white ${colorRingMap[colorClass]}`
                       : ""
                   }`}
                   onClick={() => setSelectedColor(colorClass)}
@@ -78,8 +93,10 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
             </div>
           </div>
 
-          <div className="w-full flex justify-center items-center gap-4">
-            <button className="tool-txt-btn">Create</button>
+          <div className="w-full flex justify-center gap-4">
+            <button onClick={handleCreate} className="tool-txt-btn">
+              Create
+            </button>
             <button
               onClick={() => setAddBookmarkPopup(false)}
               className="tool-txt-btn"

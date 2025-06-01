@@ -57,10 +57,10 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
             <p className="text-xl select-none">Bookmark Color</p>
             <div className="w-full flex justify-evenly items-center flex-wrap">
               {[
+                "bg-indigo-200",
                 "bg-sky-200",
                 "bg-teal-200",
                 "bg-emerald-200",
-                "bg-indigo-200",
                 "bg-fuchsia-200",
                 "bg-red-200",
                 "bg-neutral-200",

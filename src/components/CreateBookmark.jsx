@@ -16,12 +16,13 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
   const addBookmark = useStore((state) => state.addBookmark);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedColor, setSelectedColor] = useState("bg-indigo-200");
+  const [selectedColor, setSelectedColor] = useState("bg-sky-200");
 
   const handleCreate = () => {
     if (!title.trim()) return;
 
     addBookmark({
+      id: crypto.randomUUID(),
       title,
       description,
       color: selectedColor,
@@ -29,7 +30,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
 
     setTitle("");
     setDescription("");
-    setSelectedColor("bg-indigo-200");
+    setSelectedColor("bg-sky-200");
     setAddBookmarkPopup(false);
   };
 

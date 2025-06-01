@@ -3,9 +3,8 @@ import useStore from "../utils/store";
 import { IoAddOutline } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa6";
 
-export const BookmarkBoard = () => {
+export const BookmarkBoard = ({ handleDeleteClick }) => {
   const bookmarks = useStore((state) => state.bookmarks);
-  const removeBookmark = useStore((state) => state.removeBookmark);
 
   if (bookmarks.length === 0) {
     return (
@@ -33,9 +32,8 @@ export const BookmarkBoard = () => {
                 {bookmark.description}
               </p>
             )}
-
             <button
-              onClick={() => removeBookmark(bookmark.id)}
+              onClick={() => handleDeleteClick(bookmark)}
               className="card-btn absolute bottom-4 right-4 group"
             >
               <FaTrash size={24} />

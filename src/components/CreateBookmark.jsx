@@ -85,7 +85,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
                   key={colorClass}
                   className={`color-picker ${colorClass} ${
                     selectedColor === colorClass
-                      ? `ring-2 ring-offset-2 ring-offset-white ${colorRingMap[colorClass]}`
+                      ? `ring-2 ring-offset-2 ring-offset-white ${colorRingMap[colorClass]} duration-200`
                       : ""
                   }`}
                   onClick={() => setSelectedColor(colorClass)}

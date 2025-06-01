@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 
+const colorRingMap = {
+  "bg-sky-200": "ring-sky-400",
+  "bg-teal-200": "ring-teal-400",
+  "bg-emerald-200": "ring-emerald-400",
+  "bg-indigo-200": "ring-indigo-400",
+  "bg-fuchsia-200": "ring-fuchsia-400",
+  "bg-red-200": "ring-red-400",
+  "bg-neutral-200": "ring-neutral-400",
+};
+
 export const CreateBookmark = ({ setAddBookmarkPopup }) => {
+  const [selectedColor, setSelectedColor] = useState("bg-sky-200");
+
   return (
     <motion.div
       onClick={() => setAddBookmarkPopup(false)}
@@ -16,11 +28,66 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.1 }}
-        className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 h-[25rem] bg-white rounded-lg shadow-md flex justify-center items-center relative"
+        className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[30rem] bg-white rounded-lg shadow-md flex flex-col justify-start items-center gap-4"
       >
-        <h2 className="absolute top-8 left-8 text-2xl font-medium select-none">
+        <h2 className="w-full text-2xl font-semibold select-none text-center pt-8">
           Create Bookmark
         </h2>
+
+        <div className="w-full flex flex-col justify-center items-center px-8 gap-6">
+          <div className="w-full flex flex-col justify-center items-start gap-2">
+            <p className="text-xl select-none">Title</p>
+            <input
+              className="p-4 w-full rounded-lg outline-0 shadow-sm placeholder:text-neutral-400 duration-150 focus:shadow-md focus:shadow-neutral-300"
+              type="text"
+              placeholder="Enter bookmark title"
+            />
+          </div>
+
+          <div className="w-full flex flex-col justify-center items-start gap-2">
+            <p className="text-xl select-none">Description</p>
+            <input
+              className="p-4 w-full rounded-lg outline-0 shadow-sm placeholder:text-neutral-400 duration-150 focus:shadow-md focus:shadow-neutral-300"
+              type="text"
+              placeholder="Enter description (optional)"
+            />
+          </div>
+
+          <div className="w-full flex flex-col justify-center items-center gap-3">
+            <p className="text-xl select-none">Bookmark Color</p>
+            <div className="w-full flex justify-evenly items-center flex-wrap">
+              {[
+                "bg-sky-200",
+                "bg-teal-200",
+                "bg-emerald-200",
+                "bg-indigo-200",
+                "bg-fuchsia-200",
+                "bg-red-200",
+                "bg-neutral-200",
+              ].map((colorClass) => (
+                <div
+                  key={colorClass}
+                  className={`color-picker ${colorClass} ${
+                    selectedColor === colorClass
+                      ? `ring-2 ring-offset-2 ring-offset-white ${colorRingMap[colorClass]} duration-100`
+                      : ""
+                  }`}
+                  onClick={() => setSelectedColor(colorClass)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="w-full flex justify-center items-center gap-4">
+            <button className="tool-txt-btn">Create</button>
+            <button
+              onClick={() => setAddBookmarkPopup(false)}
+              className="tool-txt-btn"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       </motion.div>
     </motion.div>
   );

@@ -35,6 +35,13 @@ const useStore = create((set) => {
         localStorage.setItem("bookmarks", JSON.stringify(updated));
         return { bookmarks: updated };
       }),
+
+    updateBookmark: (updated) =>
+      set((state) => ({
+        bookmarks: state.bookmarks.map((bm) =>
+          bm.id === updated.id ? updated : bm
+        ),
+      })),
   };
 });
 

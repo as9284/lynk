@@ -2,27 +2,28 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import useStore from "../utils/store";
 import {
-  COLOR_VARIANTS,
   COLOR_NAMES,
   DEFAULT_COLOR,
   getColorClasses,
 } from "../constants/colors";
 
-export const CreateBookmark = ({ setAddBookmarkPopup }) => {
-  const addBookmark = useStore((state) => state.addBookmark);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [link, setLink] = useState("");
-  const [selectedColor, setSelectedColor] = useState(DEFAULT_COLOR);
+export const EditBookmark = ({ setEditPopup, bookmark }) => {
+  const updateBookmark = useStore((state) => state.updateBookmark);
+  const [title, setTitle] = useState(bookmark.title);
+  const [description, setDescription] = useState(bookmark.description || "");
+  const [link, setLink] = useState(bookmark.link);
+  const [selectedColor, setSelectedColor] = useState(
+    bookmark.color || DEFAULT_COLOR
+  );
   const [errors, setErrors] = useState({});
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return document.documentElement.classList.contains("dark");
-  });
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    document.documentElement.classList.contains("dark")
+  );
 
   useEffect(() => {
     const checkDarkMode = () => {
-      const darkMode = document.documentElement.classList.contains("dark");
-      setIsDarkMode(darkMode);
+      const dark = document.documentElement.classList.contains("dark");
+      setIsDarkMode(dark);
     };
 
     const observer = new MutationObserver(checkDarkMode);
@@ -35,54 +36,37 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
   }, []);
 
   const handleDescriptionChange = (e) => {
-    const newDescription = e.target.value;
-
-    if (newDescription.length <= 80) {
-      setDescription(newDescription);
+    const desc = e.target.value;
+    if (desc.length <= 80) {
+      setDescription(desc);
       setErrors((prev) => ({ ...prev, description: "" }));
     }
   };
 
-  const handleCreate = () => {
+  const handleUpdate = () => {
     const newErrors = {};
-
-    if (!title.trim()) {
-      newErrors.title = "Required";
-    }
-
-    if (!link.trim()) {
-      newErrors.link = "Required";
-    }
-
-    if (description.length > 80) {
+    if (!title.trim()) newErrors.title = "Required";
+    if (!link.trim()) newErrors.link = "Required";
+    if (description.length > 80)
       newErrors.description = `${description.length}/80 characters`;
-    }
 
     setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
 
-    if (Object.keys(newErrors).length > 0) {
-      return;
-    }
-
-    addBookmark({
-      id: crypto.randomUUID(),
+    updateBookmark({
+      ...bookmark,
       title,
       description,
       link,
       color: selectedColor,
     });
 
-    setTitle("");
-    setDescription("");
-    setLink("");
-    setSelectedColor(DEFAULT_COLOR);
-    setErrors({});
-    setAddBookmarkPopup(false);
+    setEditPopup(null);
   };
 
   return (
     <motion.div
-      onClick={() => setAddBookmarkPopup(false)}
+      onClick={() => setEditPopup(null)}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -97,15 +81,16 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
         className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 min-h-[37rem] bg-white dark:bg-black rounded-lg shadow-md flex flex-col justify-start items-center gap-4"
       >
         <h2 className="w-full text-2xl font-semibold text-center pt-8 select-none dark:text-white">
-          Create Bookmark
+          Edit Bookmark
         </h2>
 
         <div className="w-full flex flex-col items-center px-8 gap-6">
+          {/* Title Field */}
           <div className="w-full flex flex-col items-start gap-2">
             <div className="w-full flex justify-between items-center">
-              <p className="text-xl select-none dark:text-white">Title</p>
+              <p className="text-xl dark:text-white">Title</p>
               {errors.title && (
-                <p className="text-red-400 text-xs opacity-75 select-none">
+                <p className="text-red-400 text-xs opacity-75">
                   {errors.title}
                 </p>
               )}
@@ -119,22 +104,21 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
-                if (errors.title) {
-                  setErrors((prev) => ({ ...prev, title: "" }));
-                }
+                if (errors.title) setErrors((prev) => ({ ...prev, title: "" }));
               }}
             />
           </div>
 
+          {/* Description Field */}
           <div className="w-full flex flex-col items-start gap-2">
             <div className="w-full flex justify-between items-center">
-              <p className="text-xl select-none dark:text-white">Description</p>
+              <p className="text-xl dark:text-white">Description</p>
               <p
                 className={`text-xs ${
                   description.length > 80
                     ? "text-red-400"
                     : "text-gray-400 dark:text-gray-500"
-                } opacity-75 select-none`}
+                } opacity-75`}
               >
                 {errors.description || `${description.length}/80`}
               </p>
@@ -150,13 +134,12 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
             />
           </div>
 
+          {/* Link Field */}
           <div className="w-full flex flex-col items-start gap-2">
             <div className="w-full flex justify-between items-center">
-              <p className="text-xl select-none dark:text-white">Link</p>
+              <p className="text-xl dark:text-white">Link</p>
               {errors.link && (
-                <p className="text-red-400 text-xs opacity-75 select-none">
-                  {errors.link}
-                </p>
+                <p className="text-red-400 text-xs opacity-75">{errors.link}</p>
               )}
             </div>
             <input
@@ -168,17 +151,14 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
               value={link}
               onChange={(e) => {
                 setLink(e.target.value);
-                if (errors.link) {
-                  setErrors((prev) => ({ ...prev, link: "" }));
-                }
+                if (errors.link) setErrors((prev) => ({ ...prev, link: "" }));
               }}
             />
           </div>
 
+          {/* Color Picker */}
           <div className="w-full flex flex-col items-center gap-3">
-            <p className="text-xl select-none dark:text-white">
-              Bookmark Color
-            </p>
+            <p className="text-xl dark:text-white">Bookmark Color</p>
             <div className="w-full flex justify-evenly flex-wrap">
               {COLOR_NAMES.map((colorName) => {
                 const colorClasses = getColorClasses(colorName, isDarkMode);
@@ -187,7 +167,7 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
                     key={colorName}
                     className={`color-picker ${colorClasses.bg} ${
                       selectedColor === colorName
-                        ? `ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ${colorClasses.ring} duration-200`
+                        ? `ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ${colorClasses.ring}`
                         : ""
                     }`}
                     onClick={() => setSelectedColor(colorName)}
@@ -197,14 +177,12 @@ export const CreateBookmark = ({ setAddBookmarkPopup }) => {
             </div>
           </div>
 
+          {/* Buttons */}
           <div className="w-full flex justify-center gap-4">
-            <button onClick={handleCreate} className="tool-txt-btn">
-              Create
+            <button onClick={handleUpdate} className="tool-txt-btn">
+              Update
             </button>
-            <button
-              onClick={() => setAddBookmarkPopup(false)}
-              className="tool-txt-btn"
-            >
+            <button onClick={() => setEditPopup(null)} className="tool-txt-btn">
               Cancel
             </button>
           </div>

@@ -5,12 +5,14 @@ import { CreateBookmark } from "../components/CreateBookmark";
 import { DeleteBookmark } from "../components/DeleteBookmark";
 import { AnimatePresence } from "framer-motion";
 import { Settings } from "../components/Settings";
+import { EditBookmark } from "../components/EditBookmark";
 
 export const Home = () => {
   const [addBookmarkPopup, setAddBookmarkPopup] = useState(false);
   const [deleteBookmarkPopup, setDeleteBookmarkPopup] = useState(false);
   const [settingsPopup, setSettingsPopup] = useState(false);
   const [bookmarkToDelete, setBookmarkToDelete] = useState(null);
+  const [editPopup, setEditPopup] = useState(null);
 
   const handleDeleteClick = (bookmark) => {
     setBookmarkToDelete(bookmark);
@@ -39,13 +41,20 @@ export const Home = () => {
           />
         )}
         {settingsPopup && <Settings setSettingsPopup={setSettingsPopup} />}
+        {editPopup && (
+          <EditBookmark setEditPopup={setEditPopup} bookmark={editPopup} />
+        )}
       </AnimatePresence>
+
       <div className="w-full min-h-svh flex flex-col justify-start items-center p-4 gap-4">
         <Header
           setAddBookmarkPopup={setAddBookmarkPopup}
           setSettingsPopup={setSettingsPopup}
         />
-        <BookmarkBoard handleDeleteClick={handleDeleteClick} />
+        <BookmarkBoard
+          handleDeleteClick={handleDeleteClick}
+          setEditPopup={setEditPopup}
+        />
       </div>
     </>
   );

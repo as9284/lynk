@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import useStore from "../utils/store";
 import { IoAddOutline } from "react-icons/io5";
-import { FaTrash } from "react-icons/fa6";
+import { FaPen, FaTrash } from "react-icons/fa6";
 import { getColorClasses } from "../constants/colors";
 
-export const BookmarkBoard = ({ handleDeleteClick }) => {
+export const BookmarkBoard = ({ handleDeleteClick, setEditPopup }) => {
   const bookmarks = useStore((state) => state.bookmarks);
   const darkMode = useStore((state) => state.darkMode);
+  const [failedFavicons, setFailedFavicons] = useState({});
+
+  const handleFaviconError = (id) => {
+    setFailedFavicons((prev) => ({ ...prev, [id]: true }));
+  };
+
+  const getFaviconUrl = (link) => {
+    try {
+      const hostname = new URL(link).hostname;
+      return `https://icons.duckduckgo.com/ip3/${hostname}.ico`;
+    } catch {
+      return "";
+    }
+  };
 
   if (bookmarks.length === 0) {
     return (
@@ -23,6 +37,9 @@ export const BookmarkBoard = ({ handleDeleteClick }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
         {bookmarks.map((bookmark) => {
           const colorClasses = getColorClasses(bookmark.color, darkMode);
+          const showFavicon = !failedFavicons[bookmark.id];
+          const faviconUrl = getFaviconUrl(bookmark.link);
+
           return (
             <div
               onClick={() => window.open(bookmark.link, "_blank")}
@@ -39,20 +56,42 @@ export const BookmarkBoard = ({ handleDeleteClick }) => {
                 </p>
               )}
 
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteClick(bookmark);
-                }}
-                className="card-btn absolute bottom-4 right-4 group"
-              >
-                <FaTrash size={24} />
-                <span className="tooltip">Delete</span>
-              </button>
+              <div className="absolute bottom-4 right-4 flex items-center justify-center gap-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditPopup(bookmark);
+                  }}
+                  className="card-btn group"
+                >
+                  <FaPen size={24} />
+                  <span className="tooltip">Edit</span>
+                </button>
 
-              <p className="text-sm opacity-40 truncate select-none">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteClick(bookmark);
+                  }}
+                  className="card-btn group"
+                >
+                  <FaTrash size={24} />
+                  <span className="tooltip">Delete</span>
+                </button>
+              </div>
+
+              <p className="text-sm opacity-70 truncate select-none">
                 {bookmark.link}
               </p>
+
+              {showFavicon && faviconUrl && (
+                <img
+                  src={faviconUrl}
+                  alt="favicon"
+                  className="absolute bottom-4 left-4 w-10 h-10"
+                  onError={() => handleFaviconError(bookmark.id)}
+                />
+              )}
             </div>
           );
         })}

@@ -56,29 +56,27 @@ export const BookmarkBoard = ({ handleDeleteClick, setEditPopup }) => {
                 </p>
               )}
 
-              <div className="absolute bottom-4 right-4 flex items-center justify-center gap-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setEditPopup(bookmark);
-                  }}
-                  className="card-btn group"
-                >
-                  <FaPen size={24} />
-                  <span className="tooltip">Edit</span>
-                </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEditPopup(bookmark);
+                }}
+                className="card-btn group absolute bottom-4 right-16"
+              >
+                <FaPen size={24} />
+                <span className="tooltip">Edit</span>
+              </button>
 
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteClick(bookmark);
-                  }}
-                  className="card-btn group"
-                >
-                  <FaTrash size={24} />
-                  <span className="tooltip">Delete</span>
-                </button>
-              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteClick(bookmark);
+                }}
+                className="card-btn group absolute bottom-4 right-4"
+              >
+                <FaTrash size={24} />
+                <span className="tooltip">Delete</span>
+              </button>
 
               <p className="text-sm opacity-70 truncate select-none">
                 {bookmark.link}
